@@ -1,0 +1,192 @@
+﻿@model IlvtuManage.Models.Record
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>第
+    @ViewData["dayNum"]
+    天的游玩安排</h2>
+@using (Html.BeginForm("EditRecordInDay", "TravelPlans", new { dayNum = (int)ViewData["dayNum"], planId = (int)ViewData["planId"] }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-horizontal">
+        <p>
+            @Html.ActionLink("返回旅游线路", "Plan", new { planId = ViewData["planId"] })
+        </p>
+
+        <div class="form-group">
+            @Html.Label("项目内容", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.RecordInfo, new { @style = "width:100%;height:200px" })
+                @Html.ValidationMessageFor(model => model.RecordInfo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("照片", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" id="imageUpLoad" name="imageUpLoad">
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("花费预估", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("项目类型", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("recordType", ViewData["recordType"] as IEnumerable<SelectListItem>, "--Select One--", new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("游玩时间(小时)", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TravelTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TravelTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-10">
+                <br />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="创建新旅游项目" class="btn btn-default" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <br />
+            </div>
+        </div>
+     </div>
+        <table class="table">
+
+            <tr>
+                <th></th>
+                <th>
+                    图片
+                </th>
+                <th>
+                    项目
+                </th>
+                <th>
+                    类别
+                </th>
+                <th>
+                    金额
+                </th>
+                <th>
+                    时间
+                </th>
+                <th></th>
+                <th>
+
+                </th>
+            </tr>
+            @foreach (EditRecordInDayViewModel record in ViewData["records"] as IQueryable<EditRecordInDayViewModel>)
+            {
+                <tr>
+                    <th style="width:50px">
+                        @if (record.orderId != 1)
+                            {
+                            @Html.ActionLink("上移", "alterOrder", new { planId = ViewData["planId"], dayNum = ViewData["dayNum"], recordId = record.recordId, upOrder = true })
+                            }
+                        @if (record.orderId != (int)ViewData["recordNum"])
+                            {
+                            @Html.ActionLink("下移", "alterOrder", new { planId = ViewData["planId"], dayNum = ViewData["dayNum"], recordId = record.recordId, upOrder = false })
+                            }
+                    </th>
+                    <th>
+                                      
+                        <a href="@record.imgUrl" target="_blank"><img src="@record.imgUrl" style="max-width:300px" /></a>
+                        @if (record.imgUrl != null)
+                        {
+                            @Html.ActionLink("设为首图", "setlvtuimg", new { planId = ViewData["planId"], recordid = record.recordId })
+                        }
+                    </th>
+                    <th style="max-width:400px">
+                        @record.recordInfo
+                    </th>
+                    @switch (record.recordType)
+                        {
+                            case 0:
+                        <th style="width:50px">咖啡馆</th>
+                                break;
+                            case 1:
+                        <th style="width:50px">咖啡馆</th>
+                                break;
+                            case 2:
+                        <th style="width:50px">茶馆</th>
+                                break;
+                            case 3:
+                        <th style="width:50px">民宿</th>
+                                break;
+                            case 4:
+                        <th style="width:50px">街头美食</th>
+                                break;
+                            case 5:
+                        <th style="width:50px">博物馆</th>
+                                break;
+                            case 6:
+                        <th style="width:50px">商场</th>
+                                break;
+                            case 7:
+                        <th style="width:50px">公园</th>
+                                break;
+                            case 8:
+                        <th style="width:50px">湖泊</th>
+                                break;
+                            case 9:
+                        <th style="width:50px">名山</th>
+                                break;
+                            case 10:
+                        <th style="width:50px">酒店</th>
+                                break;
+                            case 11:
+                        <th style="width:50px">动物园</th>
+                                break;
+                            default:
+                        <th style="width:50px"></th>
+                                break;
+                        }
+                    <th style="width:50px">
+                        @record.cost
+                    </th>
+                    <th style="width:50px">
+                        @record.travelTime
+                    </th>
+                    @if (record.recordX == null)
+                    {
+                        <th>
+                            @Html.ActionLink("地理位置（尚未设置）", "RecGis", new { planId = ViewData["planId"], dayNum = ViewData["dayNum"], recordId = record.recordId })                           
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            @Html.ActionLink("地理位置", "RecGis", new { planId = ViewData["planId"], dayNum = ViewData["dayNum"], recordId = record.recordId })
+                        </th>
+                    }
+
+                    <th style="width:50px">
+                        @Html.ActionLink("删除", "DeleteRecordInDay", new { planId = ViewData["planId"], dayNum = ViewData["dayNum"], recordId = record.recordId })
+                    </th>
+                </tr>
+        }
+        </table>
+        <p>
+            @Html.ActionLink("返回旅游线路", "Plan", new { planId = ViewData["planId"] })
+        </p>
+        }

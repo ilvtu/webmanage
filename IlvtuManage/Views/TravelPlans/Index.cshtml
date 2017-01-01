@@ -1,0 +1,96 @@
+﻿@model IlvtuManage.Models.TravelPlan
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>规划师工作平台</h2>
+
+<p>
+    @Html.ActionLink(ViewData["userName"].ToString(), "Index", "TravelPlanner")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("制定旅游规划", "CreatePlan")
+        </th>
+        <th>
+            在此可以查看将发布的旅游规划
+        </th>
+        <th></th>
+    </tr>
+
+
+    @foreach (TravelPlan plan in ViewData["travelPlansToPublish"] as List<TravelPlan>)
+    {
+        <tr>
+            <th>
+               
+            </th>
+            <th>
+                @Html.ActionLink(plan.TravelName, "Plan", new {planId = plan.Id})
+            </th>
+            <th>
+                @Html.ActionLink("修改", "ModifyPlan", new { planId = plan.Id })
+            </th>
+            <th>
+                @Html.ActionLink("发布", "Publish",new { planId = plan.Id })
+            </th>
+            <th>
+                @Html.ActionLink("删除", "DeletePlan", new { planId = plan.Id })
+            </th>
+        </tr>
+      
+    }
+
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            在此可以查看将交易的旅游规划(提示：进入交易状态不可修改）
+        </th>
+        <th></th>
+    </tr>
+
+
+    @foreach (TravelPlan plan in ViewData["travelPlansToTrade"] as List<TravelPlan>)
+    {
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.ActionLink(plan.TravelName, "Plan", new { planId = plan.Id })
+            </th>
+            <th>
+                @Html.ActionLink("修改", "ModifyPlan", new { planId = plan.Id })
+            </th>
+            <th>
+                @Html.ActionLink("进入交易状态", "Trade", new { planId = plan.Id })
+            </th>
+            <th>
+                @Html.ActionLink("删除", "DeletePlan", new { planId = plan.Id })
+            </th>
+        </tr>
+
+    }
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    <tr>
+        <th>
+            @Html.ActionLink("规划游玩素材", "EditRecords")
+        </th>
+        <th>
+           可以导入图片，先制作出旅游活动素材，方便快速规划旅游，生成旅游线路图
+        </th>
+        <th></th>
+    </tr>
+    
+   
+</table>

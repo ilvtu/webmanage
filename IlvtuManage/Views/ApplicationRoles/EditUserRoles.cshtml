@@ -1,0 +1,84 @@
+﻿@model IlvtuManage.Models.EditUserRolesViewModel
+
+@{
+    ViewBag.Title = "角色管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>修改用户所属角色</h2>
+
+<p>
+    用户名：@Html.DisplayTextFor(model => model.User.UserName)
+</p>
+<table class="table">
+    <tr>
+        <th>
+            角色
+        </th>
+        <th>
+            说明
+        </th>
+        <th>
+            操作
+        </th>
+    </tr>
+   <tr>
+       <td>         
+            已分配角色
+       </td>
+        <td></td>
+        <td></td>
+   </tr>
+    
+    @foreach (var item in Model.Roles)
+    {       
+        <tr>            
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("去除该角色","removeUserRole", new { roleName = item.Name, userId = Model.User.Id })
+            </td>
+         
+        </tr>
+    }
+   
+    <tr>
+        <td>
+            
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>
+            未分配角色
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+   
+    @foreach (var item in Model.NonRoles)
+    {
+       
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("添加该角色", "addUserRole",new { roleName = item.Name, userId = Model.User.Id})
+            </td>
+        </tr>
+    }
+   
+   
+</table>
+<p>
+    @Html.ActionLink("回到用户角色管理", "EditAdmin")
+</p>

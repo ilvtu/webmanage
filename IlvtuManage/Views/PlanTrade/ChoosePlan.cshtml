@@ -1,0 +1,94 @@
+﻿@model IlvtuManage.Models.TravelPlan
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "为用户规划";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+@using (Html.BeginForm())
+{
+    
+    <table class="table">
+        <tr>
+            <th>
+                选择我规划的线路
+            </th>
+            <th></th>
+            <th>旅游天数</th>
+            <th>交易状态</th>
+        </tr>
+        
+        @foreach (TravelPlan plan in ViewData["myPlans"] as List<TravelPlan>)
+        {
+            
+            <tr>
+                <th>
+                    <input type="checkbox" name="checkboxPlan" value="@plan.Id" id="checkboxPlan" />
+                </th>
+                <th>
+                    @Html.ActionLink(plan.TravelName, "PlanInfo","TravelPlans", new { planId = plan.Id })
+                </th>
+                <th>
+                    @plan.TravelDays
+                </th>
+                @switch (plan.TravelStatus)
+                {
+                    case 6:
+                        <th>未交易过</th>
+                        break;
+                    case 7:
+                        <th>已交易过</th>
+                        break;
+                    default:
+                        <th></th>
+                        break;
+                }
+            </tr>
+
+        }
+        <tr>
+            <th>
+                可交易的旅游线路规划
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach (TravelPlan plan in ViewData["travelPlansToTrade"] as List<TravelPlan>)
+        {
+            <tr>
+                <th>
+
+                </th>
+                <th>
+                    @Html.ActionLink(plan.TravelName, "PlanInfo", new { planId = plan.Id })
+                </th>
+                @switch (plan.TravelStatus)
+                {
+                    case 6:
+                        <th>可以交易</th>
+                        break;
+                    case 7:
+                        <th>已交易</th>
+                        break;
+                    default:
+                        <th></th>
+                        break;
+                }
+
+            </tr>
+
+        }
+
+    </table>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="为用户选择此旅游线路" class="btn btn-default" />
+        </div>
+    </div>
+}
+

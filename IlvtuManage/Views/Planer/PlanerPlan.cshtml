@@ -1,0 +1,70 @@
+﻿@model IlvtuManage.Models.TravelPlan
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "我规划的线路";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+
+<table class="table">
+    <tr>
+        <th>
+            发布的旅游线路规划
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (TravelPlan plan in ViewData["travelPlansToPublish"] as List<TravelPlan>)
+    {
+        <tr>
+            <th>
+               
+            </th>
+            <th>
+                @Html.ActionLink(plan.TravelName, "PlanInfo", new {planId = plan.Id})
+            </th>
+            <th>
+                @Html.ActionLink("下架", "UnderCarriagePlan", new { planId = plan.Id })
+            </th>
+          
+        </tr>
+      
+    }
+    <tr>
+        <th>
+            可交易的旅游线路规划
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (TravelPlan plan in ViewData["travelPlansToTrade"] as List<TravelPlan>)
+    {
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.ActionLink(plan.TravelName, "PlanInfo", new { planId = plan.Id })
+            </th>
+            @switch (plan.TravelStatus)
+                {
+                    case 6:
+                        <th>可以交易</th>
+                        break;
+                    case 7:
+                        <th>已交易</th>
+                        break;
+                    default:
+                        <th></th>
+                        break;
+                }
+
+            </tr>
+
+    }
+
+</table>

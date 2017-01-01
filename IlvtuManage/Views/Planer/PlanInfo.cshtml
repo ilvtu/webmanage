@@ -1,0 +1,228 @@
+﻿@model IlvtuManage.Models.Record
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "PlanInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
+    <script src="http://webapi.amap.com/maps?v=1.3&key=9e8acdfb81e80b6af9f6e7790fc12d87"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+<h2></h2>
+
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <p>
+            @Html.ActionLink("返回我的线路", "PlanerPlan")
+        </p>
+        TravelPlan curPlan = ViewData["curPlan"] as TravelPlan;
+       
+        <div id="container" style=" height:450px;position:relative"></div>
+        <table class="table">
+            <tr>
+                <th>
+                    旅程详情：
+                </th>
+                <th>
+                    @curPlan.TravelInfo
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    总预算：
+                </th>
+                <th>
+                    @curPlan.TravelCost
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    适合旅游类型：
+                </th>
+                @switch (curPlan.TravelType)
+                {
+                    case 1:
+                        <th>亲子游</th>;
+                        break;
+                    case 2:
+                        <th> 蜜月游</th>;
+                        break;
+                    case 3:
+                        <th>自驾</th>;
+                        break;
+                    case 4:
+                        <th>周末郊区游</th>;
+                        break;
+                    case 5:
+                        <th>黄金周旅游</th>;
+                        break;
+                    case 6:
+                        <th>购物之旅</th>;
+                        break;
+                    default:
+                        <th></th>;
+                        break;
+                }
+            </tr>
+        </table>    
+        <script>
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: 8,
+                center: [116.397428, 40.40923]
+
+            });
+
+            var AddMarker = function (x,y) {
+                var curpoint=x+','+y;
+               
+                new AMap.Marker({
+                    position: curpoint.split(','),
+                    map: map
+                })
+               
+            }
+
+        </script>
+        <table class="table">
+            <tr>
+                <th>天数</th>
+                <th>
+                    图片
+                </th>
+                <th>
+                    项目
+                </th>
+                <th>
+                    类别
+                </th>
+                <th>
+                    金额
+                </th>
+                <th>
+                    时间
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            @for (int i = 0; i < (int)ViewData["dayNums"]; i++)
+            {
+                int j = i + 1;
+                <tr>
+                    <th>
+                        第
+                        @j
+                        天
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+
+
+                
+                string s = "recordsInDay" + j;
+                foreach (EditRecordInDayViewModel record in ViewData[s] as IQueryable<EditRecordInDayViewModel>)
+                {
+
+                    <tr >
+                        <th>                            
+                        </th>
+                        @if (@record.imgUrl != null)
+                        {
+                        <th>
+                            <a href="@record.imgUrl" target="_blank"><img src="@record.imgUrl" style="max-width:300px" onload="AddMarker(@record.recordX,@record.recordY)"/></a>
+                        </th>
+                        }
+                        else
+                        {
+                            <th>
+                                <img src="" style="max-width:300px" onload = "AddMarker(@record.recordX,@record.recordY)" />
+                            </th>
+                        }
+                        <th style="max-width:400px">
+                            @record.recordInfo
+                        </th>
+                        @switch (record.recordType)
+                        {
+                            case 0:
+                                <th style="width:50px">咖啡馆</th>
+                                break;
+                            case 1:
+                                <th style="width:50px">咖啡馆</th>
+                                break;
+                            case 2:
+                                <th style="width:50px">茶馆</th>
+                                break;
+                            case 3:
+                                <th style="width:50px">民宿</th>
+                                break;
+                            case 4:
+                                <th style="width:50px">街头美食</th>
+                                break;
+                            case 5:
+                                <th style="width:50px">博物馆</th>
+                                break;
+                            case 6:
+                                <th style="width:50px">商场</th>
+                                break;
+                            case 7:
+                                <th style="width:50px">公园</th>
+                                break;
+                            case 8:
+                                <th style="width:50px">湖泊</th>
+                                break;
+                            case 9:
+                                <th style="width:50px">名山</th>
+                                break;
+                            case 10:
+                                <th style="width:50px">酒店</th>
+                                break;
+                            case 11:
+                                <th style="width:50px">动物园</th>
+                                break;
+                            default:
+                                <th style="width:50px"></th>
+                                break;
+                        }
+                        <th style="width:50px">
+                            @record.cost
+                        </th>
+                        <th style="width:50px">
+                            @record.travelTime
+                        </th>
+
+                    </tr>
+
+                }
+
+            }
+        </table>
+        <p>
+            @Html.ActionLink("返回我的线路", "PlanerPlan")
+        </p>
+    }
+   
+</body>

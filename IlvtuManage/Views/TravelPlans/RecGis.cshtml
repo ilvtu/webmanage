@@ -1,0 +1,93 @@
+﻿@model IlvtuManage.Models.Record
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";    
+}
+        
+<head>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
+    <script src="http://webapi.amap.com/maps?v=1.3&key=9e8acdfb81e80b6af9f6e7790fc12d87"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+
+<h2>该旅游项目位置</h2>
+<body onload="bindEvent()">    
+    @using (Html.BeginForm())
+    {
+
+        <p>
+            @Html.ActionLink("返回", "EditRecordInDay",new {planId = (int)ViewData["planId"]  ,dayNum = (int)ViewData["dayNum"]})
+        </p>
+        Record curRecord = ViewData["curRecord"] as Record;
+        if (curRecord.RecordX != null)
+        {
+            <input type="hidden" id="curGis" name="curGis" value="@curRecord.RecordX,@curRecord.RecordY" />
+        }
+        else
+        {
+            <input type="hidden" id="curGis" name="curGis" value="0" />
+        }
+        <div id="container" style=" height:450px;position:relative"></div>
+        <div class="form-group" onload="bindEvent">
+            <div class="col-md-offset-2 col-md-10">
+                <input id='input' name="gis" value='点击地图显示IP' onfocus='this.value=""' />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="确定该项目位置" class="btn btn-default" />
+            </div>
+        </div>       
+        <script>
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: 8,
+                center: [116.397428, 40.40923]
+
+            });
+
+            var input = document.getElementById('input');
+            var _onClick = function (e) {
+                
+                map.clearMap();
+                new AMap.Marker({
+                    position: e.lnglat,
+                    map: map
+                })
+                input.value = e.lnglat;
+            }
+
+            var clickListener;
+            var bindEvent = function () {
+                
+                if (document.getElementById('curGis').value != 0) {
+                    var curpoint = document.getElementById('curGis').value;
+                    
+                    map.clearMap();
+                    new AMap.Marker({
+                        position: curpoint.split(','),
+                        map: map
+                    })
+                    map.setCenter(curpoint.split(','));
+                }
+
+                reset_();
+                clickListener = AMap.event.addListener(map, "click", _onClick);
+
+               
+            }
+
+            var removeEvent = function () {
+                if (clickListener) {
+                    AMap.event.removeListener(clickListener);//移除事件，以绑定时返回的对象作为参数
+                }
+            }
+            var reset_ = function () {//用在示例Demo中防止重复绑定
+                removeEvent()
+            }
+        </script>
+
+    }
+</body>

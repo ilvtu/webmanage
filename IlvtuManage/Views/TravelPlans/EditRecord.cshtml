@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>规划师工作平台</h2>
+
+<p>
+    @Html.ActionLink("创建新的旅游单项", "Index", "TravelPlanner")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("开始制定旅游规划", "EditPlans")
+            
+        </th>
+        <th>
+           
+        </th>
+    </tr>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+           
+        </th>
+
+    </tr>
+    <tr>
+        <th>
+            @Html.ActionLink("准备旅游规划素材", "EditRecords")
+        </th>
+        <th>
+           
+        </th>
+    </tr>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+           
+        </th>
+
+    </tr>
+   
+</table>

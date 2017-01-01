@@ -1,0 +1,121 @@
+﻿@model IlvtuManage.Models.TradeRequest
+@using IlvtuManage.Models
+@{
+    ViewBag.Title = "规划需求";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+
+@using (Html.BeginForm())
+{
+    TradeRequest curReq = ViewData["curReq"] as TradeRequest;
+    RequesterInfo curRequester = ViewData["curRequester"] as RequesterInfo;
+    <div>
+    
+        <dl class="dl-horizontal">
+            <dt>需求提出人:</dt>
+            <dd>
+                @curRequester.RequesterName
+            </dd>
+
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>等级:</dt>
+            <dd>
+                @curRequester.RequesterLevel
+            </dd>
+
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>头像:</dt>
+            <dd>
+                @curRequester.ImageUrl
+            </dd>
+
+        </dl>
+
+        
+        <dl class="dl-horizontal">
+            <dt>需求</dt>
+            @curReq.RequestInfo
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>费用:</dt>
+            @curReq.RequestCost
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>目标城市:</dt>
+            <dd>
+                @curReq.RequestCity
+            </dd>
+
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>旅游类型:</dt>
+            @switch (curReq.TravelType)
+                {
+                    case 1:
+                    <dd>亲子游</dd>;
+                        break;
+                    case 2:
+                    <dd> 蜜月游</dd>;
+                        break;
+                    case 3:
+                    <dd>自驾</dd>;
+                        break;
+                    case 4:
+                    <dd>周末郊区游</dd>;
+                        break;
+                    case 5:
+                    <dd>黄金周旅游</dd>;
+                        break;
+                    case 6:
+                    <dd>购物之旅</dd>;
+                        break;
+                    default:
+                    <dd></dd>;
+                        break;
+                }
+
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>出游人数:</dt>
+            <dd>
+                @curReq.TravelPeopleNumber
+            </dd>
+
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>出行日期:</dt>
+            <dd>
+                @curReq.TravelDate
+            </dd>
+        </dl>
+    </div>
+    int curtradestatus = (int)ViewData["curtradestatus"];
+    switch (curtradestatus)
+    {
+        case 1:
+            @Html.ActionLink("为旅游者规划线路", "ChoosePlan", new { requesterId = curReq.Id })
+            break;
+        case 2:
+            <p>规划完成，尚未提交用户</p>
+            @Html.ActionLink("提交规划给用户", "sendPlan", new { requesterId = curReq.Id })
+            @Html.ActionLink("继续规划", "ChoosePlan", new { requesterId = curReq.Id })
+            break;
+            case 3:
+            <p>已向用户提交线路</p>
+            break;
+        case 4:
+            <p>交易完成，用户满意！</p>
+            break;
+        case 5:
+            @Html.ActionLink("用户不满意退回，重新为旅游者规划", "ChoosePlan", new { requesterId = curReq.Id })
+            break;            
+        default:
+            break;
+    }
+}

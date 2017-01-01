@@ -1,0 +1,116 @@
+﻿@model IlvtuManage.Models.TravelPlaner
+    @using IlvtuManage.Models
+@{
+    ViewBag.Title = "旅行规划交易平台";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@if ((bool)ViewData["isAdmin"])
+{
+    <h4>管理员不能成为规划师，请退出重新注册</h4>
+
+    @Html.ActionLink("回到主页", "Index","Home")
+}
+else
+{
+    if (ViewData["planer"] != null)
+    {
+        TravelPlaner curPlaner = ViewData["planer"] as TravelPlaner;
+        switch (curPlaner.PlanerStatus)
+        {
+
+            case 1:
+                <h4>提交审核中</h4>
+                break;
+            case 2:
+                <h4>规划师审核不通过</h4>
+                break;
+            case 3:
+                <h4>规划师审核通过</h4>
+                break;
+            case 4:
+                <h4>规划师暂停</h4>
+                break;
+            case 5:
+                <h4>规划师整改</h4>
+                break;
+            case 6:
+                <h4>规划师拉黑</h4>
+                break;
+            default: break;
+
+        }
+        <hr />
+        <table class="table">
+            <tr>
+                <th>
+                    编号
+                </th>
+                <th>
+                    规划需求
+                </th>
+                <th>
+                    订单时间
+                </th>
+                <th>
+                    状态
+                </th>
+            </tr>
+            @foreach (RequestForPlanerViewModel request in ViewData["requestlist"] as IEnumerable<RequestForPlanerViewModel>)
+            {
+
+                string rinfo = request.requestInfo.ToString().Substring(0, 20)+"...";
+                int rId = request.requestId;
+                <tr>
+                    <th>
+                        @request.requestNo
+                    </th>
+                    <th>
+                        @Html.ActionLink(rinfo,"RequestInfo",new { requestId = rId })
+                    </th>
+                    <th>
+                        @request.addTime.ToShortTimeString()
+                    </th>
+                       
+                    @switch (request.statusId)
+                    {
+                        case 1:
+                            <th>新建定制需求</th>
+                            break;
+                        case 2:
+                            <th>制作完成,尚未提交</th>
+                            break;
+                        case 3:
+                            <th>已向用户提交</th>
+                            break;
+                        case 4:
+                            <th>交易完成</th>
+                            break;
+                        case 5:
+                            <th>用户退订</th>
+                            break;
+                        case 6:
+                            <th>已删除</th>
+                            break;
+                        default:
+                            <th></th>
+                            break;
+                    }
+                        
+                </tr>
+            }
+         
+        </table>
+
+
+    }
+    else
+    {
+        @Html.ActionLink("申请成为规划师", "PlanerRequest")
+    }
+
+}
+
+

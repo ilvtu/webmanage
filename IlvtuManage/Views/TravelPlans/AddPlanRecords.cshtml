@@ -1,0 +1,46 @@
+﻿
+@model IlvtuManage.Models.TravelModel
+@using IlvtuManage.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+   
+         foreach (IlvtuManage.Models.TravelPlan plan in ViewData["curPlan"] as IQueryable<IlvtuManage.Models.TravelPlan>)
+        {
+            <h2>@plan.TravelName</h2>
+        }
+  <table class="table">
+    <tr>
+        <th>
+            旅程详情：
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+    <tr>
+        <th>
+            总预算：
+        </th>
+        <th>
+
+        </th>
+    </tr>
+    <tr>
+        <th>
+            适合旅游类型：
+        </th>
+        <th>
+
+        </th>
+    </tr>
+  </table>
+<p>
+    旅游项目安排：
+</p>
+}

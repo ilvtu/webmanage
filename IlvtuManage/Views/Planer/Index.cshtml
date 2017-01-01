@@ -1,0 +1,175 @@
+﻿@model IlvtuManage.Models.TravelPlaner
+    @using IlvtuManage.Models
+@{
+    ViewBag.Title = "规划师展示";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    @if ((bool)ViewData["isAdmin"])
+    {
+        <h4>管理员不能成为规划师，请退出重新注册</h4>
+
+        @Html.ActionLink("回到主页", "Index","Home")
+    }
+    else
+    {
+        if (ViewData["planer"] != null)
+        {
+            TravelPlaner curPlaner = ViewData["planer"] as TravelPlaner;
+            switch (curPlaner.PlanerStatus)
+            {
+
+                case 1:
+                    <h4>规划师状态：待审核通过</h4>
+                    break;
+                case 2:
+                    <h4>规划师状态：审核不通过</h4>
+                    break;
+                case 3:
+                    <h4>规划师状态：审核通过</h4>
+                    break;
+                case 4:
+                    <h4>规划师状态：暂停</h4>
+                    break;
+                case 5:
+                    <h4>规划师状态：整改</h4>
+                    break;
+                case 6:
+                    <h4>规划师状态：拉黑</h4>
+                    break;
+                default: break;
+
+            }
+            <hr />
+          
+            <dl class="dl-horizontal">
+                <dt>规划师名称:</dt>
+                <dd>
+                    @curPlaner.PlanerName
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>规划师类型:</dt>
+                @switch (curPlaner.PlanerType)
+                    {
+                        case 1:
+                        <dd>签约规划师</dd>;
+                            break;
+                        case 2:
+                        <dd>旅行达人</dd>;
+                            break;
+                        case 3:
+                        <dd>认证导游</dd>;
+                            break;
+                        case 4:
+                        <dd>当地玩家</dd>;
+                            break;
+                        default:
+                            break;
+                    }               
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>性别:</dt>
+                @switch (curPlaner.Sex)
+                {
+                    case 1:
+                            <dd>男</dd>;
+                        break;
+                    case 2:
+                        <dd>女</dd>;
+                        break;
+                    case 3:
+                        <dd>未知</dd>;
+                        break;
+                    default:
+                        break;
+                }               
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>照片:</dt>
+                @if (curPlaner.PlanerPhoto != null)
+                {
+                    <dd>
+                        <img src="@curPlaner.PlanerPhoto" style="max-height:200px"/>
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                       
+                    </dd>
+                }
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>电话:</dt>
+                <dd>
+                    @curPlaner.Phone
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>QQ:</dt>
+                <dd>
+                    @curPlaner.QQ
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>Weixin:</dt>
+                <dd>
+                    @curPlaner.Weixin
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>邮箱:</dt>
+                <dd>
+                    @curPlaner.Email
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>其他联系方式:</dt>
+                <dd>
+                    @curPlaner.OtherContact
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>规划师简介:</dt>
+                <dd>
+                    @curPlaner.PlanerInfo
+                </dd>
+
+            </dl>
+            
+            <dl class="dl-horizontal">
+                <dt>博客地址:</dt>
+                <dd>
+                    @curPlaner.BlogUrl
+                </dd>
+
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>规划线路:</dt>
+                <dd>
+                    @Html.ActionLink("已上线规划线路", "PlanerPlan")
+                </dd>
+
+            </dl>
+            @Html.ActionLink("完善规划师个人信息", "EditPlanerInfo", new { id= curPlaner.Id})
+        }
+        else
+        {
+            @Html.ActionLink("申请成为规划师", "PlanerRequest")
+        }
+       
+    }
+   
+</div>

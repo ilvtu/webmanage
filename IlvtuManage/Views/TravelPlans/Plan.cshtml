@@ -1,0 +1,129 @@
+﻿
+@using IlvtuManage.Models
+@model IlvtuManage.Models.TravelModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+        
+@using (Html.BeginForm())
+{
+    TravelPlan curPlan = ViewData["curPlan"] as TravelPlan;
+    int days = (int)curPlan.TravelDays;
+    <h2>@curPlan.TravelName</h2>
+  
+  <table class="table">
+    <tr>
+        <th>
+            旅程详情：
+        </th>
+        <th>
+            @curPlan.TravelInfo
+        </th>
+    </tr>
+    <tr>
+        <th>
+            总预算：
+        </th>
+        <th>
+            @curPlan.TravelCost
+        </th>
+    </tr>
+    <tr>
+        <th>
+            适合旅游类型：
+        </th>       
+        @switch (curPlan.TravelType)
+        {
+            case 1:
+                <th>亲子游</th>;
+                break;
+            case 2:
+                <th> 蜜月游</th>;
+                break;
+            case 3:
+                <th>自驾</th>;
+                break;
+            case 4:
+                <th>周末郊区游</th>;
+                break;
+            case 5:
+                <th>黄金周旅游</th>;
+                break;
+            case 6:
+                <th>购物之旅</th>;
+                break;
+            default:
+                <th></th>;
+                break;
+        }
+    </tr>
+      <tr>
+          @if(curPlan.ShowImageUrl!=null)
+          {
+             <th>线路默认图：
+              <img src="@curPlan.ShowImageUrl" style="max-height:200px" />
+            </th>
+          }
+          else
+          {
+            <th>线路默认图：
+                <img src="http://ohtaq52av.bkt.clouddn.com/1.jpg" style="max-height:200px"/>
+            </th>
+          }
+          <th>              （可去记录页面选择设置默认图）
+          </th>
+      </tr>
+  </table>
+<p>
+    @Html.ActionLink("修改旅行线路规划", "ModifyPlan", new { planId=curPlan.Id })
+</p>
+<p>
+    旅游项目安排：
+</p>
+    
+     <table class="table">
+         @if (days <= 5)
+         {
+            <tr>
+                @for (int i = 0; i < days; i++)
+                {
+                    int j = i + 1;
+                    <th>
+                        @Html.ActionLink("第"+j+"天", "EditRecordInDay", new { dayNum=j,planId=curPlan.Id})
+                    </th>
+                }
+            </tr>             
+         }
+         else
+         {
+             int j = days / 5;
+             for (int k = 0; k < j; k++)
+             {
+                 <tr>
+                     @for (int i = 0; i < 5; i++)
+                     {
+                        int l = i + k * 5+1;
+                        <th>
+                            @Html.ActionLink("第" + l + "天", "EditRecordInDay", new { dayNum = l, planId = curPlan.Id })
+                        </th>
+                     }
+                 </tr>
+             }
+            <tr>
+                @for (int k = 0; k < days - j * 5; k++)
+                {
+                    int l = j * 5 + k + 1;
+                    <th>
+                        @Html.ActionLink("第" + l+ "天", "EditRecordInDay", new { dayNum = l, planId = curPlan.Id })
+                    </th>
+                }
+            </tr>
+
+         }
+    </table>
+
+    <div>
+        @Html.ActionLink("返回工作平台", "Index")
+    </div>
+}
